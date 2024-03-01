@@ -1,1 +1,0 @@
-{"name":"Local: a","url":"/Users/jaeyeonkim/Desktop/cpp_ps/Codeforces Round 921 (Div. 2)/a.cpp","tests":[{"id":1706367109904,"input":"4\n1 2\n2 1\n2 2\n2 3","output":"ab\naa\nbaab\nabcbac"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/jaeyeonkim/Desktop/cpp_ps/Codeforces Round 921 (Div. 2)/a.cpp","group":"local","local":true}
