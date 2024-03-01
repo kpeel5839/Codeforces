@@ -16,8 +16,6 @@
 #include <map>
 
 using namespace std;
-#define y first
-#define x second
 
 typedef long long ll;
 typedef pair<int, int> pii;
@@ -45,17 +43,24 @@ const int inf = 2e9;
 const int size = 1 << 18;
 const int mod = 1e9 + 7;
 
+ll N;
+
 void solve() {
+  cin>>N;
+  ll answer=1;
+  for(int i=1;(1<<i)<=N;i++){
+    answer=(1<<i);
+  }
+  cout<<answer<<"\n";
 }
 
 int main(void){
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
-	freopen("input.txt", "r", stdin);
-  // int T; cin >> T;
-  // while (T-- > 0) {
-  //   solve();
-  // }
-  solve();
+	// freopen("a.input.txt", "r", stdin);
+  int T; cin >> T;
+  while (T-- > 0) {
+    solve();
+  }
 	return 0;
 }

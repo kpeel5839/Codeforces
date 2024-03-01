@@ -44,18 +44,20 @@ const ll INF = 1e18;
 const int inf = 2e9;
 const int size = 1 << 18;
 const int mod = 1e9 + 7;
+int N;
+string s;
 
 void solve() {
+  cin>>N>>s;
 }
 
 int main(void){
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	freopen("input.txt", "r", stdin);
-  // int T; cin >> T;
-  // while (T-- > 0) {
-  //   solve();
-  // }
-  solve();
+  int T; cin >> T;
+  while (T-- > 0) {
+    solve();
+  }
 	return 0;
 }
