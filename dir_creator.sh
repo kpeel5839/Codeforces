@@ -9,7 +9,6 @@ i=1
 
 while [ $i -le $problemCount ]
 do
-    #filename=$(printf "%c" $((i+96)))
     filename=$(printf "\\$(printf '%03o' $((i+96)))")
     cat template/template.cpp >> "${contestName}/${filename}.cpp"
     echo "파일 ${filename}.cpp 이 생성되었습니다."
