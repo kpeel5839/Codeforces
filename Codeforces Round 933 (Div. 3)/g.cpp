@@ -46,27 +46,29 @@ const int size = 1 << 18;
 const int mod = 1e9 + 7;
 
 namespace std {
-template <> struct hash<std::vector<int>> {
-  size_t operator()(const std::vector<int> &v) const {
-    size_t hash_value = 0;
-    for (int i : v) {
-      hash_value ^= std::hash<int>()(i);
+  template<>
+  struct hash<std::vector<int>> {
+    size_t operator()(const std::vector<int>& v) const {
+      size_t hash_value = 0;
+      for (int i : v) {
+        hash_value ^= std::hash<int>()(i);
+      }
+      return hash_value;
     }
-    return hash_value;
-  }
-};
+  };
 }
 
-void solve() {}
+void solve() {
+}
 
-int main(void) {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  freopen("input.txt", "r", stdin);
-  int T;
-  cin >> T;
-  while (T-- > 0) {
-    solve();
-  }
-  return 0;
+int main(void){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	freopen("input.txt", "r", stdin);
+  // int T; cin >> T;
+  // while (T-- > 0) {
+  //   solve();
+  // }
+  solve();
+	return 0;
 }

@@ -46,27 +46,47 @@ const int size = 1 << 18;
 const int mod = 1e9 + 7;
 
 namespace std {
-template <> struct hash<std::vector<int>> {
-  size_t operator()(const std::vector<int> &v) const {
-    size_t hash_value = 0;
-    for (int i : v) {
-      hash_value ^= std::hash<int>()(i);
+  template<>
+  struct hash<std::vector<int>> {
+    size_t operator()(const std::vector<int>& v) const {
+      size_t hash_value = 0;
+      for (int i : v) {
+        hash_value ^= std::hash<int>()(i);
+      }
+      return hash_value;
     }
-    return hash_value;
-  }
-};
+  };
 }
 
-void solve() {}
+int N,M,K;
+void solve() {
+  cin>>N>>M>>K;
+  vi arr1;
+  vi arr2;
+  for(int i=0;i<N;i++){
+    int a;cin>>a;arr1.push_back(a);
+  }
+  for(int i=0;i<M;i++){
+    int a;cin>>a;arr2.push_back(a);
+  }
+  int count=0;
+  for(int i=0;i<N;i++){
+    for(int j=0;j<M;j++){
+      if(arr1[i]+arr2[j]<=K){
+        count++;
+      }
+    }
+  }
+  cout<<count<<"\n";
+}
 
-int main(void) {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  freopen("input.txt", "r", stdin);
-  int T;
-  cin >> T;
+int main(void){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	// freopen("a.input.txt", "r", stdin);
+  int T; cin >> T;
   while (T-- > 0) {
     solve();
   }
-  return 0;
+	return 0;
 }

@@ -46,27 +46,63 @@ const int size = 1 << 18;
 const int mod = 1e9 + 7;
 
 namespace std {
-template <> struct hash<std::vector<int>> {
-  size_t operator()(const std::vector<int> &v) const {
-    size_t hash_value = 0;
-    for (int i : v) {
-      hash_value ^= std::hash<int>()(i);
+  template<>
+  struct hash<std::vector<int>> {
+    size_t operator()(const std::vector<int>& v) const {
+      size_t hash_value = 0;
+      for (int i : v) {
+        hash_value ^= std::hash<int>()(i);
+      }
+      return hash_value;
     }
-    return hash_value;
-  }
-};
+  };
 }
 
-void solve() {}
+int N;
+void solve() {
+  string s;
+  cin>>N>>s;
+  int cnt=0;
+  if(s.length()<=2){
+    cout<<0<<"\n";
+    return;
+  }
+  for(int i=0;i<s.length()-2;i++){
+    string substring;
+    for(int j=0;j<3;j++){
+      substring.push_back(s.at(i+j));
+    }
+    bool mapOk=substring=="map";
+    bool pieOk=substring=="pie";
+    string subsubstring;
+    if(i+5-1<=s.length()-1){
+      for(int j=0;j<5;j++){
+        subsubstring.push_back(s.at(i+j));
+      }
+      if(subsubstring=="mapie"){
+        i+=4;
+        cnt++;
+        continue;
+      }
+    }
+    if(mapOk){
+      i+=2;
+      cnt++;
+    }else if(pieOk){
+      i+=2;
+      cnt++;
+    }
+  }
+  cout<<cnt<<"\n";
+}
 
-int main(void) {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  freopen("input.txt", "r", stdin);
-  int T;
-  cin >> T;
+int main(void){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	// freopen("c.input.txt", "r", stdin);
+  int T; cin >> T;
   while (T-- > 0) {
     solve();
   }
-  return 0;
+	return 0;
 }
