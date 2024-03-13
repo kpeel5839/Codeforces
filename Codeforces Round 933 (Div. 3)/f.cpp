@@ -57,18 +57,63 @@ namespace std {
     }
   };
 }
-
+struct comp{
+  bool operator()(ll o1,ll o2){
+    return o1<o2;
+  }
+};
+int a,b,c;
 void solve() {
+  cin>>a>>b>>c;
+  vi A(a);
+  vi B(b);
+  vi C(c);
+  for(auto&v:A){
+    cin>>v;
+  }
+  for(auto&v:B){
+    cin>>v;
+  }
+  for(auto&v:C){
+    cin>>v;
+  }
+  sort(A.begin(),A.end());
+  sort(B.begin(),B.end());
+  sort(C.begin(),C.end());
+  int l=0;
+  int r=C.size()-1;
+  priority_queue<ll,vl,comp>q;
+  ll maxE=0;
+  vl range;
+  for(int i=1;i<A.size();i++){
+    ll diff=A[i]-A[i-1];
+    q.push(diff);
+    if(maxE<diff){
+      maxE=diff;
+      range={A[i-1],A[i]};
+    }
+  }
+  maxE=q.top();q.pop();
+  ll answer=maxE;
+  while(l!=B.size()&&r!=-1){
+    ll sum=B[l]+C[r];
+    if(sum<(range[1]+range[0])/2.0){
+      l++;
+    }else{
+      r--;
+    }
+    answer=min(answer,max(range[1]-sum,sum-range[0]));
+  }
+  cout<<max((q.size()==0?0:q.top()),answer)<<"\n";
 }
 
 int main(void){
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
-	freopen("input.txt", "r", stdin);
-  // int T; cin >> T;
-  // while (T-- > 0) {
-  //   solve();
-  // }
-  solve();
+	// freopen("f.input.txt", "r", stdin);
+  int T; cin >> T;
+  while (T-- > 0) {
+    solve();
+  }
 	return 0;
 }
