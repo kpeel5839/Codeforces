@@ -46,15 +46,37 @@ const int size = 1 << 18;
 const int mod = 1e9 + 7;
 
 namespace std {
-template <> struct hash<std::vector<int>> {
-  size_t operator()(const std::vector<int> &v) const {
-    size_t hash_value = 0;
-    for (int i : v) {
-      hash_value ^= std::hash<int>()(i);
+  template <> struct hash<std::vector<int>> {
+    size_t operator()(const std::vector<int> &v) const {
+      size_t hash_value = 0;
+      for (int i : v) {
+        hash_value ^= std::hash<int>()(i);
+      }
+      return hash_value;
     }
-    return hash_value;
+  };
+}
+
+const ll MOD=1e7;
+vl fact = {1};
+ll pow_mod(ll x, ll p) {
+  if (p == 0) {
+    return 1;
   }
-};
+  if (p % 2 == 0) {
+    ll y = pow_mod(x, p / 2);
+    return (y * y) % MOD;
+  }
+  return (x * pow_mod(x, p - 1)) % MOD;
+}
+ll inv(ll x) {
+  return pow_mod(x, MOD - 2);
+}
+ll cnk(ll n, ll k) {
+  ll res = fact[n];
+  res = (res * inv(fact[k])) % MOD;
+  res = (res * inv(fact[n - k])) % MOD;
+  return res;
 }
 
 void solve() {}

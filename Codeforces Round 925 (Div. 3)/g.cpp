@@ -56,14 +56,57 @@ template <> struct hash<std::vector<int>> {
   }
 };
 }
-
+const ll MOD=998244353;
+vector<ll> fact = {1};
+ll pow_mod(ll x, ll p) {
+  if (p == 0) {
+    return 1;
+  }
+  if (p % 2 == 0) {
+    ll y = pow_mod(x, p / 2);
+    return (y * y) % MOD;
+  }
+  return (x * pow_mod(x, p - 1)) % MOD;
+}
+ll inv(ll x) {
+  return pow_mod(x, MOD - 2);
+}
+ll cnk(ll n, ll k) {
+  ll res = fact[n];
+  res = (res * inv(fact[k])) % MOD;
+  res = (res * inv(fact[n - k])) % MOD;
+  return res;
+}
+ll calc(ll n1,ll n2,ll n3,int n4){
+  return (cnk(n1+n3-1,n3)*cnk(n2+n4-1,n4))%MOD;
+}
 void solve() {
+  int n1,n2,n3,n4;cin>>n1>>n2>>n3>>n4;
+  if(1<abs(n1-n2)){
+    cout<<"0"<<"\n";
+    return;
+  }
+  if(n1==0&&n2==0){
+    cout<<(n3==0||n4==0?1:0)<<"\n";
+    return;
+  }
+  ll res=0;
+  if(n1<=n2){
+    res+=calc(n1+1,n2,n3,n4);
+  }
+  if(n2<=n1){
+    res+=calc(n1,n2+1,n3,n4);
+  }
+  cout<<(res%MOD)<<"\n";
 }
 
 int main(void) {
+  for (ll i = 1; i <= 4e6; ++i) {
+    fact.push_back((fact.back() * i) % MOD);
+  }
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
-  freopen("g.input.txt", "r", stdin);
+  // freopen("g.input.txt", "r", stdin);
   int T;
   cin >> T;
   while (T-- > 0) {
