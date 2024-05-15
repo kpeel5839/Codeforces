@@ -79,7 +79,44 @@ ll cnk(ll n, ll k) {
   return res;
 }
 
-void solve() {}
+void solve() {
+  int n,k;cin>>n>>k;k--;
+  vl arr(n);
+  for(auto&v:arr)cin>>v;
+  vb isPossible(n,true);
+  for(int i=0;i<n;i++){
+    if(arr[k]<=arr[i]){
+      isPossible[i]=false;
+      break;
+    }
+  }
+  int idx=n;
+  vi dis(n,0);
+  for(int i=n-1;0<=i;i--){
+    dis[i]=idx-1-i;
+    if(arr[k]<=arr[i]){
+      idx=i;
+    }
+  }
+  int answer=0;
+  for(int i=0;i<n;i++){
+    if(i==0){
+      if(arr[k]>arr[i]&&dis[i]+1==k){
+        answer=max(answer,dis[i]+dis[k]+1);
+      }
+      answer=max(answer,dis[i]);
+    }else{
+      if(arr[k]>arr[i]&&dis[i]+1==k){
+        answer=max(answer,dis[i]+dis[k]+2);
+      }
+      answer=max(answer,dis[i]+1);
+    }
+    if(!isPossible[i]){
+      break;
+    }
+  }
+  cout<<answer<<"\n";
+}
 
 int main(void) {
   ios_base::sync_with_stdio(false);

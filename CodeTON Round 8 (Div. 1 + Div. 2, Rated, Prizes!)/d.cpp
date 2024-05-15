@@ -78,101 +78,48 @@ ll cnk(ll n, ll k) {
   res = (res * inv(fact[n - k])) % MOD;
   return res;
 }
+struct comp{
+  bool operator()(vi& o1,vi& o2){
+    return o1[0]<o2[0];
+  }
+};
 
-int n,m,k;
-vl arr;
+int n,k;
 void solve() {
-  cin>>n>>m>>k;
-  arr=vl(m);
-  for(auto&v:arr){
-    cin>>v;
+  cin>>n>>k;
+  vii arr(n+1,vi(n+1,0));
+  for(int i=1;i<=n;i++){
+    for(int j=i;j<=n;j++){
+      cin>>arr[i][j];
+    }
   }
-  sort(arr.begin(),arr.end());
-  int selectCnt=1;
-  int additional=0;
-  vi even;
-  vi odd;
-  for(int i=0;i<arr.size();i+=0){
-    if(arr.size()-1==i){
-      int distance=arr[0]-(arr[i]-n);
-      if(distance==2){
-        additional++;
-      }else if(2<distance){
-        int cnt=distance-1;
-        if(cnt%2==0){
-          even.push_back(cnt);
-        }else{
-          odd.push_back(cnt);
-        }
-      }
-      i++;
-      continue;
+  vii dp(n+1);
+  dp[0].push_back(0);
+  for(int i=1;i<=n;i++){
+    priority_queue<vi,vii,comp>q;//{value,idx,dp idx}
+    q.push({dp[i-1][0],i-1,0});
+    q.push({arr[1][i],-1,0});
+    for(int j=i-2;0<=j;j--){
+      q.push({dp[j][0]+arr[j+2][i],j,0});
     }
-    if(arr[i+1]-arr[i]==1){
-      if(arr.size()<=i+2){
-        if(arr[0]-(arr[i]-n)==2){
-          additional++;
-          i+=2;
-          continue;
-        }
-        selectCnt++;
-        i++;
+    while(q.size()!=0&&dp[i].size()<k){
+      vi vv=q.top();q.pop();
+      int v=vv[0],iIdx=vv[1],jIdx=vv[2];
+      dp[i].push_back(v);
+      if(iIdx<0||jIdx+1==dp[iIdx].size()){
         continue;
       }
-      if(arr[i+2]-arr[i]==2){
-        additional++;
-        selectCnt++;
-        i+=2;
-        continue;
-      }
-      selectCnt++;
-      i++;
-      continue;
-    }
-    selectCnt++;
-    if(arr[i+1]-arr[i]==2){
-      additional++;
-    }else if(2<arr[i+1]-arr[i]){
-      int cnt=arr[i+1]-arr[i]-1;
-      if(cnt%2==0){
-        even.push_back(cnt);
+      if(iIdx==i-1){
+        q.push({dp[i-1][jIdx+1],iIdx,jIdx+1});
       }else{
-        odd.push_back(cnt);
+        q.push({dp[iIdx][jIdx+1]+arr[iIdx+2][i],iIdx,jIdx+1});
       }
     }
-    i++;
   }
-  sort(odd.begin(),odd.end());
-  sort(even.begin(),even.end());
-  for(int i=0;i<odd.size();i++){
-    if(k==0){
-      break;
-    }
-    int cnt=odd[i];
-    selectCnt+=min(k,(int)cnt/2);
-    additional+=min(k,(int)cnt/2);
-    if((int)cnt/2<=k){
-      additional++;
-    }
-    k-=min(k,(int)cnt/2);
+  for(auto v:dp[n]){
+    cout<<v<<" ";
   }
-  for(int i=0;i<even.size();i++){
-    if(k==0){
-      break;
-    }
-    int cnt=even[i];
-    selectCnt+=min(k,(int)cnt/2);
-    additional+=min(k,(int)cnt/2);
-    k-=min(k,(int)cnt/2);
-  }
-  if(selectCnt==3){
-    selectCnt=1;
-  }else if(selectCnt<3){
-    selectCnt=0;
-  }else{
-    selectCnt=2+(selectCnt-4);
-  }
-  cout<<selectCnt+additional<<"\n";
+  cout<<"\n";
 }
 
 int main(void) {

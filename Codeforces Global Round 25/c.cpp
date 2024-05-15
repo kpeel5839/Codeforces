@@ -79,7 +79,40 @@ ll cnk(ll n, ll k) {
   return res;
 }
 
-void solve() {}
+int n,m,k;
+vl arr;
+struct comp{
+  bool operator()(vl& a, vl& b) {
+    return a[0]>b[0];
+  }
+};
+void solve() {
+  cin>>n>>m>>k;
+  arr.resize(n);
+  priority_queue<vl,vll,comp>q;
+  for(int i=0;i<n;i++) {
+    cin>>arr[i];
+    q.push({arr[i],i});
+  }
+  vl buy(n,0);
+  int size=ceil((double)k/(double)m);
+  for(int i=0;i<size;i++){
+    vl vv=q.top();q.pop();
+    ll v=vv[0],idx=vv[1];
+    buy[idx]=min(m,k);
+    k-=m;
+  }
+  ll nowBuy=0;
+  ll answer=0;
+  for(int i=0;i<n;i++){
+    if(buy[i]==0){
+      continue;
+    }
+    answer+=(arr[i]+nowBuy)*(buy[i]);
+    nowBuy+=buy[i];
+  }
+  cout<<answer<<"\n";
+}
 
 int main(void) {
   ios_base::sync_with_stdio(false);

@@ -79,7 +79,44 @@ ll cnk(ll n, ll k) {
   return res;
 }
 
-void solve() {}
+ll c,k;
+void solve() {
+  cin>>c>>k;
+  if(c<k){
+    cout<<"NO"<<"\n";
+    return;
+  }
+  vl answer;
+  bool success=false;
+  for(int i=0;i<2;i++){
+    ll nowPurpose=k-i;
+    if(nowPurpose==c){
+      success=true;
+      answer.push_back(1);
+      break;
+    }
+    ll possibleUpperBound=ceil(c/2.0)-1ll;
+    if(k-(i+1)>possibleUpperBound){
+      break;
+    }
+    if(k-(i+1)<=possibleUpperBound){
+      answer.push_back(c-(k-(i+1)));
+      c=k-(i+1);
+    }else{
+      answer.push_back(c-possibleUpperBound);
+      c=possibleUpperBound;
+    }
+  }
+  if(!success){
+    cout<<"NO"<<"\n";
+    return;
+  }
+  cout<<"YES\n"<<answer.size()<<"\n";
+  for(auto&v:answer){
+    cout<<v<<" ";
+  }
+  cout<<"\n";
+}
 
 int main(void) {
   ios_base::sync_with_stdio(false);

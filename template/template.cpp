@@ -16,8 +16,6 @@
 #include <vector>
 
 using namespace std;
-#define y first
-#define x second
 
 typedef long long ll;
 typedef pair<int, int> pii;
@@ -40,55 +38,93 @@ typedef vector<bool> vb;
 typedef vector<vb> vbb;
 typedef vector<vbb> vbbb;
 typedef vector<vbbb> vbbbb;
-const ll INF = 1e18;
-const int inf = 2e9;
-const int size = 1 << 18;
-const int mod = 1e9 + 7;
+typedef vector<double> vd;
+typedef vector<vd> vdd;
+typedef vector<vdd> vddd;
+typedef vector<vddd> vdddd;
 
-namespace std {
-  template <> struct hash<std::vector<int>> {
-    size_t operator()(const std::vector<int> &v) const {
-      size_t hash_value = 0;
-      for (int i : v) {
-        hash_value ^= std::hash<int>()(i);
-      }
-      return hash_value;
-    }
-  };
-}
+// namespace std {
+//     template <> struct hash<std::vector<int>> {
+//         size_t operator()(const std::vector<int> &v) const {
+//             size_t hash_value = 0;
+//             for (int i : v) {
+//                 hash_value ^= std::hash<int>()(i);
+//             }
+//             return hash_value;
+//         }
+//     };
+// }
 
-const ll MOD=1e7;
-vl fact = {1};
-ll pow_mod(ll x, ll p) {
-  if (p == 0) {
-    return 1;
-  }
-  if (p % 2 == 0) {
-    ll y = pow_mod(x, p / 2);
-    return (y * y) % MOD;
-  }
-  return (x * pow_mod(x, p - 1)) % MOD;
-}
-ll inv(ll x) {
-  return pow_mod(x, MOD - 2);
-}
-ll cnk(ll n, ll k) {
-  ll res = fact[n];
-  res = (res * inv(fact[k])) % MOD;
-  res = (res * inv(fact[n - k])) % MOD;
-  return res;
-}
+// int idValue;
+// int sccValue;
+// vi idx;
+// stack<int>st;
+// vi already;
+// vii graph;
+
+// int scc(int x){
+//     idx[x]=++idValue;
+//     st.push(x);
+//     int mi=idx[x];
+//     for(int next:graph[x]){
+//         if(!idx[next]){
+//             mi=min(mi,scc(next));
+//         }else if(!already[next]){
+//             mi=min(mi,idx[next]);
+//         }
+//     }
+//     if(mi==idx[x]){
+//         sccValue++;
+//         while(st.size()!=0){
+//             int a=st.top();st.pop();
+//             already[a]=sccValue;
+//             if(a==x){
+//                 break;
+//             }
+//         }
+//     }
+//     return mi;
+// }
+
+// int oppo(int a){
+//     if(a<0){//홀수로 반환
+//         return (abs(a)-1)*2+1;
+//     }
+//     return (a-1)*2;
+// }
+
+// const ll MOD=1e7;
+// vl fact = {1};
+// ll pow_mod(ll x, ll p) {
+//     if (p == 0) {
+//         return 1;
+//     }
+//     if (p % 2 == 0) {
+//         ll y = pow_mod(x, p / 2);
+//         return (y * y) % MOD;
+//     }
+//     return (x * pow_mod(x, p - 1)) % MOD;
+// }
+// ll inv(ll x) {
+//     return pow_mod(x, MOD - 2);
+// }
+// ll cnk(ll n, ll k) {
+//     ll res = fact[n];
+//     res = (res * inv(fact[k])) % MOD;
+//     res = (res * inv(fact[n - k])) % MOD;
+//     return res;
+// }
 
 void solve() {}
 
 int main(void) {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  freopen("input.txt", "r", stdin);
-  int T;
-  cin >> T;
-  while (T-- > 0) {
-    solve();
-  }
-  return 0;
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    freopen("input.txt", "r", stdin);
+    int T;
+    cin >> T;
+    while (T-- > 0) {
+        solve();
+    }
+    return 0;
 }

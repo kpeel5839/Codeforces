@@ -79,7 +79,43 @@ ll cnk(ll n, ll k) {
   return res;
 }
 
-void solve() {}
+string s;
+int n;
+bool isPal(int l,int r){
+  while(l<r){
+    if(s[l++]!=s[r--]){
+      return false;
+    }
+  }
+  return true;
+}
+void solve() {
+  cin>>s;n=s.size();
+  if(!isPal(0,n-1)){
+    cout<<"YES\n1\n"<<s<<"\n";
+    return;
+  }
+  int firstDiff=-1;
+  for(int i=1;i<n;i++){
+    if(s[i]!=s[0]){
+      firstDiff=i;
+      break;
+    }
+  }
+  if(firstDiff==-1){
+    cout<<"NO\n";
+    return;
+  }
+  if(!isPal(firstDiff+1,n-1)){
+    cout<<"YES\n2"<<"\n";
+    cout<<s.substr(0,firstDiff+1)<<" "<<s.substr(firstDiff+1)<<"\n";
+  }else if(n%2==1&&firstDiff==1||firstDiff==n/2){
+    cout<<"NO\n";
+  }else{
+    cout<<"YES\n2"<<"\n";
+    cout<<s.substr(0,firstDiff+2)<<" "<<s.substr(firstDiff+2)<<"\n";
+  }
+}
 
 int main(void) {
   ios_base::sync_with_stdio(false);

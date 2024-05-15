@@ -57,7 +57,7 @@ namespace std {
   };
 }
 
-const ll MOD=1e7;
+const ll MOD=998244353;
 vl fact = {1};
 ll pow_mod(ll x, ll p) {
   if (p == 0) {
@@ -73,18 +73,35 @@ ll inv(ll x) {
   return pow_mod(x, MOD - 2);
 }
 ll cnk(ll n, ll k) {
+  if(n<0||k<0){
+    return 0;
+  }
+  if(n<k){
+    return 0;
+  }
   ll res = fact[n];
   res = (res * inv(fact[k])) % MOD;
   res = (res * inv(fact[n - k])) % MOD;
   return res;
 }
 
-void solve() {}
+void solve() {
+  int l,n;cin>>l>>n;
+  ll allEven=0;
+  for(int i=0;i<=l;i+=2){
+    allEven+=2*cnk(i/2+n-1,n-1)%MOD*cnk(l-i-n,n)%MOD;
+    allEven%=MOD;
+  }
+  cout<<((2*cnk(l,2*n)%MOD-allEven+MOD)%MOD)<<"\n";
+}
 
 int main(void) {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   freopen("e.input.txt", "r", stdin);
+  for(int i=1;i<=1e6;i++){
+    fact.push_back((fact.back()*i)%MOD);
+  }
   int T;
   cin >> T;
   while (T-- > 0) {
