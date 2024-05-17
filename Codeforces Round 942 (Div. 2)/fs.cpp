@@ -16,8 +16,6 @@
 #include <vector>
 
 using namespace std;
-#define y first
-#define x second
 
 typedef long long ll;
 typedef pair<int, int> pii;
@@ -44,17 +42,144 @@ typedef vector<double> vd;
 typedef vector<vd> vdd;
 typedef vector<vdd> vddd;
 typedef vector<vddd> vdddd;
-const ll INF = 1e18;
-const int inf = 2e9;
-const int size = 1 << 18;
-double MOD=998244353;
+
+#define rep(x, y, z) for (int x = (y); x <= (z); ++x)
+#define per(x, y, z) for (int x = (y); x >= (z); --x)
+
+template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
+template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+
+template<int mod>
+inline unsigned int down(unsigned int x) {
+	return x >= mod ? x - mod : x;
+}
+
+template<int mod>
+struct Modint {
+	unsigned int x;
+	Modint() = default;
+	Modint(unsigned int x) : x(x) {}
+	friend istream& operator>>(istream& in, Modint& a) {return in >> a.x;}
+	friend ostream& operator<<(ostream& out, Modint a) {return out << a.x;}
+	friend Modint operator+(Modint a, Modint b) {return down<mod>(a.x + b.x);}
+	friend Modint operator-(Modint a, Modint b) {return down<mod>(a.x - b.x + mod);}
+	friend Modint operator*(Modint a, Modint b) {return 1ULL * a.x * b.x % mod;}
+	friend Modint operator/(Modint a, Modint b) {return a * ~b;}
+	friend Modint operator^(Modint a, int b) {Modint ans = 1; for(; b; b >>= 1, a *= a) if(b & 1) ans *= a; return ans;}
+	friend Modint operator~(Modint a) {return a ^ (mod - 2);}
+	friend Modint operator-(Modint a) {return down<mod>(mod - a.x);}
+	friend Modint& operator+=(Modint& a, Modint b) {return a = a + b;}
+	friend Modint& operator-=(Modint& a, Modint b) {return a = a - b;}
+	friend Modint& operator*=(Modint& a, Modint b) {return a = a * b;}
+	friend Modint& operator/=(Modint& a, Modint b) {return a = a / b;}
+	friend Modint& operator^=(Modint& a, int b) {return a = a ^ b;}
+	friend Modint& operator++(Modint& a) {return a += 1;}
+	friend Modint operator++(Modint& a, int) {Modint x = a; a += 1; return x;}
+	friend Modint& operator--(Modint& a) {return a -= 1;}
+	friend Modint operator--(Modint& a, int) {Modint x = a; a -= 1; return x;}
+	friend bool operator==(Modint a, Modint b) {return a.x == b.x;}
+	friend bool operator!=(Modint a, Modint b) {return !(a == b);}
+};
+
+// namespace std {
+//     template <> struct hash<std::vector<int>> {
+//         size_t operator()(const std::vector<int> &v) const {
+//             size_t hash_value = 0;
+//             for (int i : v) {
+//                 hash_value ^= std::hash<int>()(i);
+//             }
+//             return hash_value;
+//         }
+//     };
+// }
+
+// int idValue;
+// int sccValue;
+// vi idx;
+// stack<int>st;
+// vi already;
+// vii graph;
+
+// int scc(int x){
+//     idx[x]=++idValue;
+//     st.push(x);
+//     int mi=idx[x];
+//     for(int next:graph[x]){
+//         if(!idx[next]){
+//             mi=min(mi,scc(next));
+//         }else if(!already[next]){
+//             mi=min(mi,idx[next]);
+//         }
+//     }
+//     if(mi==idx[x]){
+//         sccValue++;
+//         while(st.size()!=0){
+//             int a=st.top();st.pop();
+//             already[a]=sccValue;
+//             if(a==x){
+//                 break;
+//             }
+//         }
+//     }
+//     return mi;
+// }
+
+// int oppo(int a){
+//     if(a<0){//홀수로 반환
+//         return (abs(a)-1)*2+1;
+//     }
+//     return (a-1)*2;
+// }
+
+// const ll MOD=1e7;
+// vl fact = {1};
+// ll pow_mod(ll x, ll p) {
+//     if (p == 0) {
+//         return 1;
+//     }
+//     if (p % 2 == 0) {
+//         ll y = pow_mod(x, p / 2);
+//         return (y * y) % MOD;
+//     }
+//     return (x * pow_mod(x, p - 1)) % MOD;
+// }
+// ll inv(ll x) {
+//     return pow_mod(x, MOD - 2);
+// }
+// ll cnk(ll n, ll k) {
+//     ll res = fact[n];
+//     res = (res * inv(fact[k])) % MOD;
+//     res = (res * inv(fact[n - k])) % MOD;
+//     return res;
+// }
+
+const int N=1e6+100,mod=998244353;
+typedef Modint<mod> mint;
+
+mint a[N],inv[N];
+int lowbit(int x){
+    return x&(-x);
+}
 void solve() {
+    ll n,k; cin>>n>>k;
+    rep(i,1,n) cin>>a[i];
+    rep(i,1,n){
+        mint mul=1;
+        for(int u=i+lowbit(i),d=1;u<=n;u+=lowbit(u),d++){
+            mul*=(d+k-1)*inv[d];
+            a[u]-=mul*a[i];
+        }
+    }
+    rep(i,1,n)cout<<a[i]<<" ";
+    cout<<"\n";
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     freopen("f.input.txt", "r", stdin);
+    inv[0]=inv[1]=1;
+    rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
     int T;
     cin >> T;
     while (T-- > 0) {

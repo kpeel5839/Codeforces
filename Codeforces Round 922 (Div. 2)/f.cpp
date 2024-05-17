@@ -43,44 +43,6 @@ typedef vector<vd> vdd;
 typedef vector<vdd> vddd;
 typedef vector<vddd> vdddd;
 
-#define rep(x, y, z) for (int x = (y); x <= (z); ++x)
-#define per(x, y, z) for (int x = (y); x >= (z); --x)
-
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
-
-// template<int mod>
-// inline unsigned int down(unsigned int x) {
-// 	return x >= mod ? x - mod : x;
-// }
-
-// template<int mod>
-// struct Modint {
-// 	unsigned int x;
-// 	Modint() = default;
-// 	Modint(unsigned int x) : x(x) {}
-// 	friend istream& operator>>(istream& in, Modint& a) {return in >> a.x;}
-// 	friend ostream& operator<<(ostream& out, Modint a) {return out << a.x;}
-// 	friend Modint operator+(Modint a, Modint b) {return down<mod>(a.x + b.x);}
-// 	friend Modint operator-(Modint a, Modint b) {return down<mod>(a.x - b.x + mod);}
-// 	friend Modint operator*(Modint a, Modint b) {return 1ULL * a.x * b.x % mod;}
-// 	friend Modint operator/(Modint a, Modint b) {return a * ~b;}
-// 	friend Modint operator^(Modint a, int b) {Modint ans = 1; for(; b; b >>= 1, a *= a) if(b & 1) ans *= a; return ans;}
-// 	friend Modint operator~(Modint a) {return a ^ (mod - 2);}
-// 	friend Modint operator-(Modint a) {return down<mod>(mod - a.x);}
-// 	friend Modint& operator+=(Modint& a, Modint b) {return a = a + b;}
-// 	friend Modint& operator-=(Modint& a, Modint b) {return a = a - b;}
-// 	friend Modint& operator*=(Modint& a, Modint b) {return a = a * b;}
-// 	friend Modint& operator/=(Modint& a, Modint b) {return a = a / b;}
-// 	friend Modint& operator^=(Modint& a, int b) {return a = a ^ b;}
-// 	friend Modint& operator++(Modint& a) {return a += 1;}
-// 	friend Modint operator++(Modint& a, int) {Modint x = a; a += 1; return x;}
-// 	friend Modint& operator--(Modint& a) {return a -= 1;}
-// 	friend Modint operator--(Modint& a, int) {Modint x = a; a -= 1; return x;}
-// 	friend bool operator==(Modint a, Modint b) {return a.x == b.x;}
-// 	friend bool operator!=(Modint a, Modint b) {return !(a == b);}
-// };
-
 // namespace std {
 //     template <> struct hash<std::vector<int>> {
 //         size_t operator()(const std::vector<int> &v) const {
@@ -153,22 +115,79 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 //     return res;
 // }
 
-// const int N=1e6+100,mod=998244353;
-// typedef Modint<mod> mint;
-// mint a[N],inv[N];
-
+struct comp{
+    bool operator()(ll a,ll b){
+        return a<b;
+    }
+};
+vi d;
+vi p;
+vi h;
+ll n,k;
+vii graph;
+priority_queue<ll,vl,comp>pq;
+int maxDepth;
+void dfs(int cur){
+    d[cur]=0;
+    if(cur!=1){
+        h[cur]=h[p[cur]]+1;
+    }
+    for(int next:graph[cur]){
+        dfs(next);
+        d[cur]=max(d[cur],d[next]+1);
+    }
+    sort(graph[cur].begin(),graph[cur].end(),[](int o1,int o2) {
+        return d[o1]<d[o2];
+    });
+}
 void solve() {
+    cin>>n>>k;
+    graph=vii(n+1);
+    p=vi(n+1,0);
+    p[1]=1;
+    for(int i=2;i<=n;i++){
+        cin>>p[i];
+        graph[p[i]].push_back(i);
+    }
+    ll total=(n-1)*2;
+    d=vi(n+1,0);
+    h=vi(n+1,0);
+    dfs(1);
+    vi jumpGain;
+    for(int i=1;i<=n;i++){
+        if(graph[i].size()==0){
+            int v=i;
+            int jump=0;
+            while(v>1){
+                if(graph[p[v]].size()!=0&&graph[p[v]].back()==v){
+                    v=p[v];
+                    jump++;
+                }else{
+                    jump=jump+1-h[p[v]];
+                    break;
+                }
+            }
+            jumpGain.push_back(jump);
+        }
+    }
+    sort(jumpGain.begin(),jumpGain.end(),[](int o1,int o2) {
+        return o1>o2;
+    });
+    ++k;
+    for(int i=0;i<k;i++){
+        if(jumpGain.size()==i||jumpGain[i]<0){
+            break;
+        }
+        cout<<jumpGain[i]<<"\n";
+        total-=jumpGain[i];
+    }
+    cout<<total<<"\n";
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
     freopen("f.input.txt", "r", stdin);
-    int T;
-    cin >> T;
-    while (T-- > 0) {
-        solve();
-    }
+    solve();
     return 0;
 }
