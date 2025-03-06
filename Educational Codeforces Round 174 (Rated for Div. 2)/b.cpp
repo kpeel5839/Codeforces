@@ -46,8 +46,18 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template <typename T>
+void chkmin(T &x, T y)
+{
+    if (x > y)
+        x = y;
+}
+template <typename T>
+void chkmax(T &x, T y)
+{
+    if (x < y)
+        x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -157,17 +167,80 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-void solve() {
+int n, m;
+vi dy = {-1, 0, 1, 0};
+vi dx = {0, 1, 0, -1};
+bool isOutOfRange(int y, int x)
+{
+    return y < 0 || y >= n || x < 0 || x >= m;
+}
+void solve()
+{
+    cin >> n >> m;
+    vii arr(n, vi(m));
+    vii group(n, vi(m));
+    unordered_map<int, set<int>> mp;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            cin >> arr[i][j];
+        }
+    }
+
+    int answer = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            set<int> adjacentGroup;
+            for (int dir = 0; dir < 4; dir++)
+            {
+                int ny = i + dy[dir];
+                int nx = j + dx[dir];
+                if (isOutOfRange(ny, nx) || arr[ny][nx] != arr[i][j])
+                {
+                    continue;
+                }
+                adjacentGroup.insert(group[ny][nx]);
+            }
+            for (int number = 1; number <= 2; number++)
+            {
+                if (adjacentGroup.find(number) == adjacentGroup.end())
+                {
+                    mp[arr[i][j]].insert(number);
+                    group[i][j] = number;
+                    break;
+                }
+            }
+        }
+    }
+    int allCount = 0;
+    int maxCount = 0;
+    for (auto &v : mp)
+    {
+        maxCount = max(maxCount, (int)v.second.size());
+        allCount += (int)v.second.size();
+    }
+    cout << allCount - maxCount << "\n";
+    // for(int i=0;i<n;i++){
+    //     for(int j=0;j<m;j++){
+    //         cout<<group[i][j]<<" ";
+    //     }
+    //     cout<<"\n";
+    // }
 }
 
-int main(void) {
+int main(void)
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("f.input.txt", "r", stdin);
+    freopen("b.input.txt", "r", stdin);
     int T;
     cin >> T;
-    while (T-- > 0) {
+    while (T-- > 0)
+    {
         solve();
     }
     return 0;

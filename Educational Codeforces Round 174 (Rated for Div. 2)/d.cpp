@@ -46,8 +46,18 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template <typename T>
+void chkmin(T &x, T y)
+{
+    if (x > y)
+        x = y;
+}
+template <typename T>
+void chkmax(T &x, T y)
+{
+    if (x < y)
+        x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -157,17 +167,159 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-void solve() {
+string s;
+int n;
+vi l(26, 0);
+vi r(26, 0);
+bool isOk(bool isLeft)
+{
+    vi ll(26, 0);
+    vi rr(26, 0);
+    bool good = true;
+    for (int i = 0; i < 26; i++)
+    {
+        ll[i] = l[i];
+        rr[i] = r[i];
+    }
+    if (isLeft)
+    {
+        for (int i = 0; i < 26; i++)
+        {
+            ll[i] -= rr[i];
+            if (ll[i] < 0)
+            {
+                good = false;
+                break;
+            }
+            if (ll[i] % 2 != 0)
+            {
+                good = false;
+                break;
+            }
+        }
+        return good;
+    }
+    for (int i = 0; i < 26; i++)
+    {
+        rr[i] -= ll[i];
+        if (rr[i] < 0)
+        {
+            good = false;
+            break;
+        }
+        if (rr[i] % 2 != 0)
+        {
+            good = false;
+            break;
+        }
+    }
+    return good;
+}
+void solve()
+{
+    cin >> s;
+    n = s.size();
+    int startPoint = 0;
+    for (int i = 0; i < n / 2; i++)
+    {
+        startPoint = i;
+        if (s[i] != s[n - 1 - i])
+        {
+            break;
+        }
+    }
+    if (startPoint == n / 2 - 1)
+    {
+        cout << 0 << "\n";
+        return;
+    }
+
+    int answer = 1e9;
+    int ma = 1e9;
+
+    l = vi(26, 0);
+    r = vi(26, 0);
+
+    // left to right to half
+    for (int i = startPoint; i < n / 2; i++)
+    {
+        l[s[i] - 'a']++;
+        r[s[n - i - 1] - 'a']++;
+        if (isOk(true))
+        {
+            if (ma == 1e9)
+            {
+                ma = i;
+            }
+        }
+        else
+        {
+            ma = 1e9;
+        }
+    }
+
+    if (ma != 1e9)
+    {
+        answer = min(answer, ma - startPoint + 1);
+    }
+
+    // left to right over half
+    ma = 1e9;
+    for (int i = n / 2; i < n - startPoint; i++)
+    {
+        l[s[i] - 'a']++;
+        r[s[i] - 'a']--;
+        if (isOk(true))
+        {
+                ma = i;
+                break;
+        }
+    }
+    if (ma != 1e9)
+    {
+        answer = min(answer, ma - startPoint + 1);
+    }
+
+    l = vi(26, 0);
+    r = vi(26, 0);
+
+    // right to left to half
+    for (int i = startPoint; i < n / 2; i++)
+    {
+        l[s[i] - 'a']++;
+        r[s[n - i - 1] - 'a']++;
+    }
+
+    // right to left over half
+    ma = 1e9;
+    for (int i = n / 2 - 1; startPoint <= i; i--)
+    {
+        l[s[i] - 'a']--;
+        r[s[i] - 'a']++;
+        if (isOk(false))
+        {
+            ma = i;
+            break;
+        }
+    }
+    if (ma != 1e9)
+    {
+        answer = min(answer, (n - 1 - startPoint) - ma + 1);
+    }
+
+    cout << answer << "\n";
 }
 
-int main(void) {
+int main(void)
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("f.input.txt", "r", stdin);
+    freopen("d.input.txt", "r", stdin);
     int T;
     cin >> T;
-    while (T-- > 0) {
+    while (T-- > 0)
+    {
         solve();
     }
     return 0;

@@ -46,8 +46,18 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template <typename T>
+void chkmin(T &x, T y)
+{
+    if (x > y)
+        x = y;
+}
+template <typename T>
+void chkmax(T &x, T y)
+{
+    if (x < y)
+        x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -157,17 +167,88 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-void solve() {
+ll MOD = 998244353;
+ll pow_mod(ll a, ll b)
+{
+    if (b == 0)
+        return 1;
+    if (b == 1)
+        return a;
+    ll c = pow_mod(a, b / 2);
+    if (b % 2 == 0)
+        return (c * c) % MOD;
+    else
+        return (((a * c) % MOD) * c) % MOD;
 }
 
-int main(void) {
+ll customPow(ll a, ll b, bool noMinus)
+{
+    if (noMinus)
+    {
+        return pow_mod(a, b);
+    }
+
+    return (pow_mod(a, b) + MOD - 1) % MOD;
+}
+
+void solve()
+{
+    int n;
+    cin >> n;
+    vi arr(n);
+    for (auto &v : arr)
+    {
+        cin >> v;
+    }
+    ll answer = 0;
+    ll oneCount = 0;
+    ll previousRightTwoCount = 0;
+    ll rightTwoCount = (arr[0] == 2 ? 1 : 0) + (arr[1] == 2 ? 1 : 0);
+    ll leftTwoCount = 0;
+    ll lastSum = 0;
+    int leftPoint = 0;
+    for (int i = 2; i < n; i++)
+    {
+        if (arr[i] == 2)
+        {
+            rightTwoCount++;
+        }
+        if (arr[i] == 3)
+        {
+            lastSum = (((lastSum + oneCount) % MOD * customPow(2, rightTwoCount - previousRightTwoCount, true) % MOD) % MOD + MOD - oneCount) % MOD;
+            previousRightTwoCount = rightTwoCount;
+            answer = (answer + lastSum) % MOD;
+            ll temp = 0;
+            while (leftPoint < i - 1)
+            {
+                if (arr[leftPoint] == 2)
+                {
+                    leftTwoCount++;
+                }
+                if (arr[leftPoint] == 1)
+                {
+                    temp = (temp + customPow(2, rightTwoCount - leftTwoCount, false)) % MOD;
+                    oneCount++;
+                    lastSum = (lastSum + customPow(2, rightTwoCount - leftTwoCount, false)) % MOD;
+                }
+                leftPoint++;
+            }
+            answer = (answer + temp) % MOD;
+        }
+    }
+    cout << answer << "\n";
+}
+
+int main(void)
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("f.input.txt", "r", stdin);
+    freopen("c.input.txt", "r", stdin);
     int T;
     cin >> T;
-    while (T-- > 0) {
+    while (T-- > 0)
+    {
         solve();
     }
     return 0;
