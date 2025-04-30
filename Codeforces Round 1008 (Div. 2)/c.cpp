@@ -46,8 +46,18 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template <typename T>
+void chkmin(T &x, T y)
+{
+    if (x > y)
+        x = y;
+}
+template <typename T>
+void chkmax(T &x, T y)
+{
+    if (x < y)
+        x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -157,17 +167,116 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-void solve() {
+void solve()
+{
+    ll n;
+    cin >> n;
+    vl arr(n * 2, 0);
+    unordered_set<ll> se;
+    for (auto &v : arr)
+    {
+        cin >> v;
+        se.insert(v);
+    }
+    sort(arr.begin(), arr.end(), [](ll a, ll b)
+         { return a < b; });
+
+    vl prefixSum(arr.size(), arr[0]);
+    for (int i = 1; i < arr.size(); i++)
+    {
+        prefixSum[i] = arr[i] + prefixSum[i - 1];
+    }
+    int halfIndex = (int)prefixSum.size() / 2;
+    int answerIndex = 0;
+    ll value = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (i < halfIndex)
+        {
+            ll negative = prefixSum[halfIndex - 1];
+            ll positive = prefixSum[(int)prefixSum.size() - 1] - negative;
+
+            ll findValue = positive - negative;
+            if(findValue<=0){
+                continue;
+            }
+            if (se.find(findValue) == se.end())
+            {
+                value = findValue;
+                answerIndex = i;
+                break;
+            }
+            i = halfIndex - 1;
+        }
+        else
+        {
+            ll negative = prefixSum[halfIndex - 2];
+            ll positive = prefixSum[(int)prefixSum.size() - 1] - negative;
+
+            ll findValue = (positive - arr[i]) - (negative + arr[i]);
+            if (findValue <= 0)
+            {
+                continue;
+            }
+            if (se.find(findValue) == se.end())
+            {
+                value = findValue;
+                answerIndex = i;
+                break;
+            }
+        }
+    }
+
+    vl answer((int)arr.size() + 1, 0);
+
+    answer[0] = arr[answerIndex];
+    answer[(int)answer.size() - 1] = value;
+    int plusIndex = 1;
+    int minusIndex = 2;
+
+    // for (auto &v : arr)
+    // {
+    //     cout << v << " ";
+    // }
+
+    // cout << "\n";
+    // cout << "value and answer index : " << value << " " << answerIndex << "\n";
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (answerIndex == i)
+        {
+            continue;
+        }
+        if (minusIndex + 2 <= (int)arr.size())
+        {
+            answer[minusIndex] = arr[i];
+            minusIndex += 2;
+        }
+        else
+        {
+            answer[plusIndex] = arr[i];
+            plusIndex += 2;
+        }
+    }
+
+    for (auto &v : answer)
+    {
+        cout << v << " ";
+    }
+    cout << "\n";
 }
 
-int main(void) {
+int main(void)
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("input.txt", "r", stdin);
+    freopen("c.input.txt", "r", stdin);
     int T;
     cin >> T;
-    while (T-- > 0) {
+    while (T-- > 0)
+    {
         solve();
     }
     return 0;

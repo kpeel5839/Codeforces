@@ -46,8 +46,16 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template<typename T>
+void chkmin(T &x, T y) {
+  if (x > y)
+    x = y;
+}
+template<typename T>
+void chkmax(T &x, T y) {
+  if (x < y)
+    x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -158,17 +166,42 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // mint a[N],inv[N];
 
 void solve() {
+  int n;
+  cin >> n;
+  vi arr(n);
+  for (auto &v: arr) {
+    cin >> v;
+  }
+  int cnt = 0;
+  vii answer;
+  for (int i = 0; i < n; i++) {
+    if (i != n - 1 && (arr[i] == 0 || arr[i + 1] == 0)) {
+      answer.push_back({i + 1 - cnt, i + 2 - cnt});
+      cnt++;
+      i++;
+      continue;
+    }
+    if (i == n - 1 && arr[i] == 0) {
+      answer.push_back({n - 1 - cnt, n - cnt});
+      cnt++;
+    }
+  }
+  answer.push_back({1, n - cnt});
+  cout << answer.size() << "\n";
+  for (auto &v: answer) {
+    cout << v[0] << " " << v[1] << "\n";
+  }
 }
 
 int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("input.txt", "r", stdin);
-    int T;
-    cin >> T;
-    while (T-- > 0) {
-        solve();
-    }
-    return 0;
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr);
+  // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
+  freopen("b.input.txt", "r", stdin);
+  int T;
+  cin >> T;
+  while (T-- > 0) {
+    solve();
+  }
+  return 0;
 }

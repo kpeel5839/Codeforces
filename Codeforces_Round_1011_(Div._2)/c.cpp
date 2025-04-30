@@ -46,8 +46,18 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template <typename T>
+void chkmin(T &x, T y)
+{
+    if (x > y)
+        x = y;
+}
+template <typename T>
+void chkmax(T &x, T y)
+{
+    if (x < y)
+        x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -157,17 +167,43 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-void solve() {
+void solve()
+{
+    ll x, y;
+    cin >> x >> y;
+    ll mi = 0;
+    for (int i = 0; i <= 31; i++)
+    {
+        ll v = (1ll << i);
+        if (((x & v) != 0) || ((y & v) != 0))
+        {
+            mi = v;
+            break;
+        }
+    }
+    for (int i = mi; i <= mi + 1e5; i++)
+    {
+        int newX = x + i;
+        int newY = y + i;
+        if ((newX + newY) == (newX | newY))
+        {
+            cout << i << "\n";
+            return;
+        }
+    }
+    cout << -1 << "\n";
 }
 
-int main(void) {
+int main(void)
+{
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("input.txt", "r", stdin);
+    freopen("c.input.txt", "r", stdin);
     int T;
     cin >> T;
-    while (T-- > 0) {
+    while (T-- > 0)
+    {
         solve();
     }
     return 0;

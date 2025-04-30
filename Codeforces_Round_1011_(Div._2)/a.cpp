@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <dirent.h>
 #include <cmath>
 #include <cstdio>
 #include <deque>
@@ -14,6 +15,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <unistd.h>
 
 using namespace std;
 
@@ -46,8 +48,16 @@ typedef vector<vddd> vdddd;
 #define rep(x, y, z) for (int x = (y); x <= (z); ++x)
 #define per(x, y, z) for (int x = (y); x >= (z); --x)
 
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
+template<typename T>
+void chkmin(T &x, T y) {
+  if (x > y)
+    x = y;
+}
+template<typename T>
+void chkmax(T &x, T y) {
+  if (x < y)
+    x = y;
+}
 
 // template<int mod>
 // inline unsigned int down(unsigned int x) {
@@ -158,17 +168,48 @@ template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
 // mint a[N],inv[N];
 
 void solve() {
-}
+  int n, k;
+  cin >> n >> k;
+  string s;
+  cin >> s;
+  for (int i = 0; i < (int) s.size() / 2; i++) {
+    int a = s[i] - 'a';
+    int b = s[n - 1 - i] - 'a';
 
-int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("input.txt", "r", stdin);
-    int T;
-    cin >> T;
-    while (T-- > 0) {
-        solve();
+    if (a < b) {
+      cout << "YES\n";
+      return;
     }
-    return 0;
+
+    if (a > b) {
+      if (k == 0) {
+        cout << "NO\n";
+        return;
+      }
+      cout << "YES\n";
+      return;
+    }
+
+    for (int j = i + 1; j < n - 1 - i; j++) {
+      int c = s[j] - 'a';
+
+      if (c != a && k > 0) {
+        cout << "YES\n";
+        return;
+      }
+    }
+  }
+  cout << "NO" << "\n";
+}
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr);
+  // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
+  freopen("Codeforces_Round_1011_(Div._2)/a.input.txt", "r", stdin);
+  int T;
+  cin >> T;
+  while (T-- > 0) {
+    solve();
+  }
+  return 0;
 }

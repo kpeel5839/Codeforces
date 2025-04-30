@@ -164,7 +164,7 @@ int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("input.txt", "r", stdin);
+    freopen("f.input.txt", "r", stdin);
     int T;
     cin >> T;
     while (T-- > 0) {
