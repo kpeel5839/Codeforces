@@ -1,3 +1,58 @@
+# IntelliJ IDEA / CLion files
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+cmake-build-*/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# C++ build outputs
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+a.out.dSYM/
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Compiled object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Debug files
+*.ilk
+*.map
+*.exp
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Temporary files
+*~
+*.swp
+*.swo
+
 *.bin
 .DS_Store
 *.bin.*/
