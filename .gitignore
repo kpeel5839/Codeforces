@@ -27,6 +27,17 @@ a.out.dSYM/
 *.idb
 *.pdb
 
+# Competitive programming executables (no extension)
+[a-z]
+[a-z][0-9]
+[a-z][0-9][0-9]
+*/[a-z]
+*/[a-z][0-9]
+*/[a-z][0-9][0-9]
+*/**/[a-z]
+*/**/[a-z][0-9]
+*/**/[a-z][0-9][0-9]
+
 # Compiled object files
 *.slo
 *.lo
