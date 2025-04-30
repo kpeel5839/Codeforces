@@ -91,7 +91,6 @@ i=1
 while [ $i -le $problemCount ]
 do
     filename=$(printf "\\$(printf '%03o' $((i+96)))")
-    echo ${filename}
     cat template/template.cpp | sed "s#freopen(\"input.txt\", \"r\", stdin);#freopen(\"${contestName}/${filename}.input.txt\", \"r\", stdin);#" >> "${contestName}/${filename}.cpp"
     echo "파일 ${filename}.cpp 이 생성되었습니다."
     touch "${contestName}/${filename}.input.txt"
