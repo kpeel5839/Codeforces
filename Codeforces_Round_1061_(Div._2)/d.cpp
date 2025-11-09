@@ -1,174 +1,155 @@
-#include <algorithm>
-#include <cmath>
-#include <cstdio>
-#include <deque>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <set>
-#include <sstream>
-#include <stack>
-#include <string.h>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
+class Solution {
+  public:
+    typedef vector<int> vi;
+    typedef vector<vi> vii;
+    typedef vector<bool> vb;
+    typedef vector<vb> vbb;
+    vii mat;
+    int h, w;
+    vi dy = {0, -1, 0, 1};
+    vi dx = {-1, 0, 1, 0};
 
-using namespace std;
+    vi parent;
+    vi ranked;
+    unordered_set<int> f;
 
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef pair<ll, ll> pll;
-typedef vector<pii> vpii;
-typedef vector<pll> vpll;
-typedef vector<int> vi;
-typedef vector<vi> vii;
-typedef vector<vii> viii;
-typedef vector<viii> viiii;
-typedef vector<ll> vl;
-typedef vector<vl> vll;
-typedef vector<vll> vlll;
-typedef vector<vlll> vllll;
-typedef vector<char> vc;
-typedef vector<vc> vcc;
-typedef vector<vcc> vccc;
-typedef vector<vccc> vcccc;
-typedef vector<bool> vb;
-typedef vector<vb> vbb;
-typedef vector<vbb> vbbb;
-typedef vector<vbbb> vbbbb;
-typedef vector<double> vd;
-typedef vector<vd> vdd;
-typedef vector<vdd> vddd;
-typedef vector<vddd> vdddd;
+    int flood = 0;
+    int trapped = 0;
 
-#define rep(x, y, z) for (int x = (y); x <= (z); ++x)
-#define per(x, y, z) for (int x = (y); x >= (z); --x)
-
-template<typename T> void chkmin(T& x, T y) {if(x > y) x = y;}
-template<typename T> void chkmax(T& x, T y) {if(x < y) x = y;}
-
-// template<int mod>
-// inline unsigned int down(unsigned int x) {
-// 	return x >= mod ? x - mod : x;
-// }
-
-// template<int mod>
-// struct Modint {
-// 	unsigned int x;
-// 	Modint() = default;
-// 	Modint(unsigned int x) : x(x) {}
-// 	friend istream& operator>>(istream& in, Modint& a) {return in >> a.x;}
-// 	friend ostream& operator<<(ostream& out, Modint a) {return out << a.x;}
-// 	friend Modint operator+(Modint a, Modint b) {return down<mod>(a.x + b.x);}
-// 	friend Modint operator-(Modint a, Modint b) {return down<mod>(a.x - b.x + mod);}
-// 	friend Modint operator*(Modint a, Modint b) {return 1ULL * a.x * b.x % mod;}
-// 	friend Modint operator/(Modint a, Modint b) {return a * ~b;}
-// 	friend Modint operator^(Modint a, int b) {Modint ans = 1; for(; b; b >>= 1, a *= a) if(b & 1) ans *= a; return ans;}
-// 	friend Modint operator~(Modint a) {return a ^ (mod - 2);}
-// 	friend Modint operator-(Modint a) {return down<mod>(mod - a.x);}
-// 	friend Modint& operator+=(Modint& a, Modint b) {return a = a + b;}
-// 	friend Modint& operator-=(Modint& a, Modint b) {return a = a - b;}
-// 	friend Modint& operator*=(Modint& a, Modint b) {return a = a * b;}
-// 	friend Modint& operator/=(Modint& a, Modint b) {return a = a / b;}
-// 	friend Modint& operator^=(Modint& a, int b) {return a = a ^ b;}
-// 	friend Modint& operator++(Modint& a) {return a += 1;}
-// 	friend Modint operator++(Modint& a, int) {Modint x = a; a += 1; return x;}
-// 	friend Modint& operator--(Modint& a) {return a -= 1;}
-// 	friend Modint operator--(Modint& a, int) {Modint x = a; a -= 1; return x;}
-// 	friend bool operator==(Modint a, Modint b) {return a.x == b.x;}
-// 	friend bool operator!=(Modint a, Modint b) {return !(a == b);}
-// };
-
-// namespace std {
-//     template <> struct hash<std::vector<int>> {
-//         size_t operator()(const std::vector<int> &v) const {
-//             size_t hash_value = 0;
-//             for (int i : v) {
-//                 hash_value ^= std::hash<int>()(i);
-//             }
-//             return hash_value;
-//         }
-//     };
-// }
-
-// int idValue;
-// int sccValue;
-// vi idx;
-// stack<int>st;
-// vi already;
-// vii graph;
-
-// int scc(int x){
-//     idx[x]=++idValue;
-//     st.push(x);
-//     int mi=idx[x];
-//     for(int next:graph[x]){
-//         if(!idx[next]){
-//             mi=min(mi,scc(next));
-//         }else if(!already[next]){
-//             mi=min(mi,idx[next]);
-//         }
-//     }
-//     if(mi==idx[x]){
-//         sccValue++;
-//         while(st.size()!=0){
-//             int a=st.top();st.pop();
-//             already[a]=sccValue;
-//             if(a==x){
-//                 break;
-//             }
-//         }
-//     }
-//     return mi;
-// }
-
-// int oppo(int a){
-//     if(a<0){//홀수로 반환
-//         return (abs(a)-1)*2+1;
-//     }
-//     return (a-1)*2;
-// }
-
-// const ll MOD=1e7;
-// vl fact = {1};
-// ll pow_mod(ll x, ll p) {
-//     if (p == 0) {
-//         return 1;
-//     }
-//     if (p % 2 == 0) {
-//         ll y = pow_mod(x, p / 2);
-//         return (y * y) % MOD;
-//     }
-//     return (x * pow_mod(x, p - 1)) % MOD;
-// }
-// ll inv(ll x) {
-//     return pow_mod(x, MOD - 2);
-// }
-// ll cnk(ll n, ll k) {
-//     ll res = fact[n];
-//     res = (res * inv(fact[k])) % MOD;
-//     res = (res * inv(fact[n - k])) % MOD;
-//     return res;
-// }
-
-// const int N=1e6+100,mod=998244353;
-// typedef Modint<mod> mint;
-// mint a[N],inv[N];
-
-void solve() {
-}
-
-int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-    freopen("Codeforces_Round_1061_(Div._2)/d.input.txt", "r", stdin);
-    int T;
-    cin >> T;
-    while (T-- > 0) {
-        solve();
+    bool isOutOfRange(int y, int x) {
+      return y < 0 || y >= h || x < 0 || x >= w;
     }
-    return 0;
-}
+
+    int getIdx(int i, int j) { return i * w + j; }
+
+    int find(int x) {
+      if (parent[x] == x) {
+        return x;
+      }
+      return parent[x] = find(parent[x]);
+    }
+
+    void uni(int a, int b) {
+      // a, b의 부모를 찾고, 이가 f라면 trapped에서 빼준다.
+      // 만일, 새롭게 f가 되는 것이 아니라면, f에서 빼주지 않는다.
+      a = find(a);
+      b = find(b);
+
+      if (a == b) {
+        return;
+      }
+
+      bool isAExists = f.find(a) != f.end();
+      bool isBExists = f.find(b) != f.end();
+
+      if (isAExists && isBExists) {
+        // a, b 둘 다 있는 경우 (둘 다 flood)
+        parent[b] = a;
+        ranked[a] += ranked[b]; // flood는 여기서는 기록을 따로 안함
+      }
+
+      if (isAExists && !isBExists) {
+        // a 만 flood (flood)
+        // b 집합은 flood로 넘어가는거임, 즉 trapped에서 빼줘야함
+        parent[b] = a;
+        ranked[a] += ranked[b];
+        trapped -=
+            ranked[b]; // 대신 trapped는 요소 탐색할 때 마다, 추가해줘야함
+      }
+
+      if (!isAExists && isBExists) {
+        // b 만 있는 경우 (flood)
+        parent[a] = b;
+        ranked[b] += ranked[a];
+        trapped -= ranked[a];
+      }
+
+      if (!isAExists && !isBExists) {
+        // 둘 다 flood 아닌 경우
+        parent[b] = a;
+        ranked[a] += ranked[b];
+      }
+    }
+
+    int trapRainWater(vector<vector<int> > &heightMap) {
+      this->mat = heightMap;
+      this->h = mat.size();
+      this->w = mat[0].size();
+
+      map<int, vii> m;
+
+      parent = vi(h * w, 0);
+      ranked = vi(h * w, 1);
+      for (int i = 0; i < parent.size(); i++) {
+        parent[i] = i;
+      }
+
+      for (int i = 0; i < w; i++) {
+        int idx1 = getIdx(0, i);
+        int idx2 = getIdx(h - 1, i);
+
+        f.insert(idx1);
+        f.insert(idx2);
+      }
+
+      for (int i = 0; i < h; i++) {
+        int idx1 = getIdx(i, 0);
+        int idx2 = getIdx(i, w - 1);
+
+        f.insert(idx1);
+        f.insert(idx2);
+      }
+
+      flood = f.size();
+
+      for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
+          m[mat[i][j]].push_back({i, j});
+        }
+      }
+
+      vector<pair<int, vii> > arr;
+
+      for (auto &v: m) {
+        arr.push_back({v.first, v.second});
+      }
+
+      sort(arr.begin(),
+           arr.end(),
+           [](pair<int, vii> &a, pair<int, vii> &b) {
+             return a.first < b.first;
+           });
+
+      int answer = 0;
+
+      for (int i = 0; i < arr.size(); i++) {
+        int diff = (i == 0 ? 0 : arr[i].first - arr[i - 1].first);
+        // cout<<"value : " <<arr[i].first<<" trapped : "<<trapped<<"\n";
+        answer += (diff * trapped);
+
+        for (auto &v: arr[i].second) {
+          int y = v[0];
+          int x = v[1];
+          int idx = getIdx(y, x);
+
+          if (f.find(idx) == f.end()) {
+            trapped++;
+          }
+
+          for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+
+            if (isOutOfRange(ny, nx) || mat[ny][nx] > mat[y][x]) {
+              continue;
+            }
+
+            int nIdx = getIdx(ny, nx);
+            uni(idx, nIdx);
+          }
+        }
+      }
+
+      return answer;
+    }
+};
