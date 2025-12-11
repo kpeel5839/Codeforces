@@ -159,120 +159,80 @@ void chkmax(T &x, T y) { if (x < y) x = y; }
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-int n;
-vii graph;
-vi path;
-unordered_set<int> paths;
-
-bool findPaths(int parent, int current) {
-  if (current == n) {
-    path.push_back(n);
-    return true;
-  }
-
-  for (auto &next: graph[current]) {
-    if (next == parent) {
-      continue;
-    }
-
-    if (findPaths(current, next)) {
-      path.push_back(current);
-      return true;
-    }
-  }
-
-  return false;
-}
-
-struct comp {
-  bool operator()(vi &o1, vi &o2) {
-    return o1[1] < o2[1];
-  }
-};
-
-priority_queue<vi, vii, comp> pq; // 거리가 큰 애들부터 뽑음
-int startDistance = 1;
-
-void dfs(int parent, int current, int distance) {
-  if (paths.find(current) == paths.end()) {
-    pq.push({current, distance});
-  }
-
-  for (auto &next: graph[current]) {
-    if (next == parent) {
-      continue;
-    }
-    dfs(current, next, distance + 1);
-  }
-}
-
 void solve() {
-  cin >> n;
-  graph = vii(n + 1);
-  path = vi();
-  paths = unordered_set<int>();
-  pq = priority_queue<vi, vii, comp>();
-
-  for (int i = 0; i < n - 1; i++) {
-    int u, v;
-    cin >> u >> v;
-    graph[u].push_back(v);
-    graph[v].push_back(u);
+  // 일단, 왼쪽 max
+  // 오른쪽, max 가 필요함
+  ll n, k;
+  cin >> n >> k;
+  vl a(n);
+  vl b(n);
+  for (auto &v: a) {
+    cin >> v;
   }
 
-  findPaths(-1, 1);
-  vi tempPath;
-  for (int i = (int) path.size() - 1; 0 <= i; i--) {
-    tempPath.push_back(path[i]);
-  }
-  path = tempPath;
-
-  for (auto &v: path) {
-    paths.insert(v);
+  for (auto &v: b) {
+    cin >> v;
   }
 
-  vii answer;
-  int distance = 1;
+  vl toLeft(n, 0);
+  vl toRight(n, 0);
 
-  dfs(-1, 1, startDistance);
-  while (!pq.empty()) {
-    vi point = pq.top();
-
-    if (point[1] > distance || (distance - point[1]) % 2 == 1) {
-      answer.push_back({2, point[0]});
-      pq.pop();
-    }
-
-    answer.push_back({1});
-    distance++;
+  ll sum = 0;
+  for (int i = 0; i < n; i++) {
+    // toLeft
+    sum += a[i];
+    sum = max(0ll, sum);
+    toLeft[i] = sum;
   }
 
-  if (distance % 2 != 1) {
-    answer.push_back({1});
+  // for (int i = 0; i < n; i++) {
+  //   cout << toLeft[i] << " ";
+  // }
+  // cout << "\n";
+
+  sum = 0;
+  for (int i = n - 1; 0 <= i; i--) {
+    // toRight
+    sum += a[i];
+    sum = max(0ll, sum);
+    toRight[i] = sum;
   }
 
-  for (int i = 0; i < (int) path.size() - 1; i++) {
-    answer.push_back({1});
-    answer.push_back({2, path[i]});
-  }
+  // for (int i = 0; i < n; i++) {
+  //   cout << toRight[i] << " ";
+  // }
+  // cout << "\n";
 
-  cout << answer.size() << "\n";
-  for (auto &v: answer) {
-    if (v.size() == 2) {
-      cout << v[0] << " " << v[1] << "\n";
+  ll answer = -1e15;
+
+  if (n == 1) {
+    if (k % 2 == 1) {
+      cout << a[0] + b[0] << "\n";
     } else {
-      cout << v[0] << "\n";
+      cout << a[0] << "\n";
+    }
+    return;
+  }
+
+  for (int i = 0; i < n; i++) {
+    int add = k % 2 == 0 ? 0 : b[i];
+    if (i == 0) {
+      answer = max(answer, a[i] + add + toRight[i + 1]);
+    } else if (i == n - 1) {
+      answer = max(answer, a[i] + add + toLeft[i - 1]);
+    } else {
+      answer = max(answer, a[i] + add + toLeft[i - 1] + toRight[i + 1]);
     }
   }
 
-  cout << "\n";
+  cout << answer << "\n";
 }
 
 int main(void) {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-  freopen("Codeforces_Round_1060_(Div._2)/d.input.txt", "r", stdin);
+  freopen("Codeforces_Round_1067_(Div._2)/c.input.txt", "r", stdin);
   int T;
   cin >> T;
   while (T-- > 0) {

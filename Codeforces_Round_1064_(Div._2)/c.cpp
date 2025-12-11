@@ -159,120 +159,100 @@ void chkmax(T &x, T y) { if (x < y) x = y; }
 // typedef Modint<mod> mint;
 // mint a[N],inv[N];
 
-int n;
-vii graph;
-vi path;
-unordered_set<int> paths;
-
-bool findPaths(int parent, int current) {
-  if (current == n) {
-    path.push_back(n);
-    return true;
-  }
-
-  for (auto &next: graph[current]) {
-    if (next == parent) {
-      continue;
-    }
-
-    if (findPaths(current, next)) {
-      path.push_back(current);
-      return true;
-    }
-  }
-
-  return false;
-}
-
 struct comp {
   bool operator()(vi &o1, vi &o2) {
-    return o1[1] < o2[1];
+    return max(o1[2], o1[3]) > max(o2[2], o2[3]);
   }
 };
 
-priority_queue<vi, vii, comp> pq; // 거리가 큰 애들부터 뽑음
-int startDistance = 1;
-
-void dfs(int parent, int current, int distance) {
-  if (paths.find(current) == paths.end()) {
-    pq.push({current, distance});
-  }
-
-  for (auto &next: graph[current]) {
-    if (next == parent) {
-      continue;
-    }
-    dfs(current, next, distance + 1);
-  }
-}
-
 void solve() {
+  int n;
   cin >> n;
-  graph = vii(n + 1);
-  path = vi();
-  paths = unordered_set<int>();
-  pq = priority_queue<vi, vii, comp>();
+  vb visited(n, false);
+  priority_queue<vi, vii, comp> pq; // {idx1, idx2, element, element}
+  vi arr;
+  vii edges(n, vi(2, 0));
+  for (int i = 0; i < n; i++) {
+    int v;
+    cin >> v;
+    arr.push_back(v);
+  }
+
+  int LEFT = 0;
+  int RIGHT = 1;
+
+  for (int i = 0; i < n; i++) {
+    if (i == 0) {
+      edges[i][LEFT] = n - 1;
+      edges[i][RIGHT] = i + 1;
+    } else if (i == n - 1) {
+      edges[i][LEFT] = i - 1;
+      edges[i][RIGHT] = 0;
+    } else {
+      edges[i][LEFT] = i - 1;
+      edges[i][RIGHT] = i + 1;
+    }
+
+    pq.push({edges[i][LEFT], i, arr[i], arr[edges[i][LEFT]]});
+    pq.push({i, edges[i][RIGHT], arr[i], arr[edges[i][RIGHT]]});
+  }
+
+  ll answer = 0;
 
   for (int i = 0; i < n - 1; i++) {
-    int u, v;
-    cin >> u >> v;
-    graph[u].push_back(v);
-    graph[v].push_back(u);
-  }
-
-  findPaths(-1, 1);
-  vi tempPath;
-  for (int i = (int) path.size() - 1; 0 <= i; i--) {
-    tempPath.push_back(path[i]);
-  }
-  path = tempPath;
-
-  for (auto &v: path) {
-    paths.insert(v);
-  }
-
-  vii answer;
-  int distance = 1;
-
-  dfs(-1, 1, startDistance);
-  while (!pq.empty()) {
-    vi point = pq.top();
-
-    if (point[1] > distance || (distance - point[1]) % 2 == 1) {
-      answer.push_back({2, point[0]});
+    vi selected;
+    while (true) {
+      vi points = pq.top();
       pq.pop();
+      if (visited[points[0]] || visited[points[1]]) {
+        continue;
+      }
+      selected = points;
+      break;
     }
 
-    answer.push_back({1});
-    distance++;
-  }
+    int idx1 = selected[0];
+    int idx2 = selected[1];
+    // cout << "idxes : " << idx1 << " " << idx2 << "\n";
 
-  if (distance % 2 != 1) {
-    answer.push_back({1});
-  }
+    // idx1, idx2 중 큰 애만 살려야함, 같은 경우 오른쪽만 살림
+    if (arr[idx1] <= arr[idx2]) {
+      // 오른쪽 애 살림
+      visited[idx1] = true;
+      answer += (ll) arr[idx2];
+      // cout << arr[idx2] << "\n";
 
-  for (int i = 0; i < (int) path.size() - 1; i++) {
-    answer.push_back({1});
-    answer.push_back({2, path[i]});
-  }
-
-  cout << answer.size() << "\n";
-  for (auto &v: answer) {
-    if (v.size() == 2) {
-      cout << v[0] << " " << v[1] << "\n";
+      // idx2의 왼쪽을 죽였으니, 왼쪽왼쪽을 가져와야함
+      int leftleft = edges[idx1][LEFT];
+      edges[leftleft][RIGHT] = idx2;
+      edges[idx2][LEFT] = leftleft;
+      pq.push({leftleft, idx2, arr[idx2], arr[leftleft]});
     } else {
-      cout << v[0] << "\n";
+      // 왼쪽 애 살림
+      visited[idx2] = true;
+      answer += (ll) arr[idx1];
+      // cout << arr[idx1] << "\n";
+
+      // idx2를 죽였으니 idx2의 right를 가져와야함
+      int rightright = edges[idx2][RIGHT];
+      edges[rightright][LEFT] = idx1;
+      edges[idx1][RIGHT] = rightright;
+      pq.push({idx1, rightright, arr[idx1], arr[rightright]});
     }
   }
 
-  cout << "\n";
+  // for (int i = 0; i < n; i++) {
+  // cout << "i : " << i << " left : " << edges[i][LEFT] << " right : " << edges[i][RIGHT] << "\n";
+  // }
+
+  cout << answer << "\n";
 }
 
 int main(void) {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   // rep(i,2,N-1) inv[i]=(mod-mod/i)*inv[mod%i];
-  freopen("Codeforces_Round_1060_(Div._2)/d.input.txt", "r", stdin);
+  freopen("Codeforces_Round_1064_(Div._2)/c.input.txt", "r", stdin);
   int T;
   cin >> T;
   while (T-- > 0) {
